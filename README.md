@@ -30,6 +30,9 @@ The `get-iles` subcommand is used to retrieve the history and status of a partic
 ./pd-remedy get-iles --api-key KEY --subdomain SUBDOMAIN --incident-id ID
 ```
 
+## License
+[Apache 2](http://www.apache.org/licenses/LICENSE-2.0)
+
 ## Contributing
 1. Fork this repo and clone it to your workstation.
 1. Create a feature branch for your change.
