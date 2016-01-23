@@ -12,7 +12,7 @@ func TestCreateResolveConfig(t *testing.T) {
 		"My Description",
 	}
 
-	_, err := createResolveConfig(&args)
+	_, err := createResolveConfig(args)
 	if err != nil {
 		t.Error(err)
 	}
@@ -24,7 +24,7 @@ func TestCreateResolveConfig(t *testing.T) {
 		"-incident-key",
 		"NOT_A_REAL_KEY",
 	}
-	_, err = createResolveConfig(&args)
+	_, err = createResolveConfig(args)
 	if err != nil {
 		t.Error(err)
 	}
@@ -42,7 +42,7 @@ func TestCreateTriggerConfig(t *testing.T) {
 		"My Details",
 	}
 
-	_, err := createTriggerConfig(&args)
+	_, err := createTriggerConfig(args)
 	if err != nil {
 		t.Error(err)
 	}
@@ -54,7 +54,7 @@ func TestCreateTriggerConfig(t *testing.T) {
 		"-description",
 		"My Description",
 	}
-	_, err = createTriggerConfig(&args)
+	_, err = createTriggerConfig(args)
 	if err != nil {
 		t.Error(err)
 	}
@@ -70,7 +70,7 @@ func TestCreateGetIlesConfig(t *testing.T) {
 		"MY_INCIDENT_ID",
 	}
 
-	_, err := createGetIlesConfig(&args)
+	_, err := createGetIlesConfig(args)
 	if err != nil {
 		t.Error(err)
 	}
@@ -86,7 +86,7 @@ func TestCreateGetIdConfig(t *testing.T) {
 		"MY_INCIDENT_KEY",
 	}
 
-	_, err := createGetIdConfig(&args)
+	_, err := createGetIdConfig(args)
 	if err != nil {
 		t.Error(err)
 	}
@@ -102,7 +102,7 @@ func TestConfigCheckConfig(t *testing.T) {
 		"MY_INCIDENT_KEY",
 	}
 
-	c, err := createGetIdConfig(&args)
+	c, err := createGetIdConfig(args)
 	if err != nil {
 		t.Error(err)
 	}
@@ -137,7 +137,7 @@ func TestConfigApiEndpoint(t *testing.T) {
 		"MY_INCIDENT_ID",
 	}
 
-	c, err := createGetIlesConfig(&args)
+	c, err := createGetIlesConfig(args)
 	if err != nil {
 		t.Error(err)
 	}

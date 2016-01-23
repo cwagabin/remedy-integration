@@ -24,25 +24,25 @@ func main() {
 	switch mode {
 	case "trigger":
 		{
-			c, err := createTriggerConfig(&args)
+			c, err := createTriggerConfig(args)
 			failIf(err)
 			triggerResolve(c)
 		}
 	case "resolve":
 		{
-			c, err := createResolveConfig(&args)
+			c, err := createResolveConfig(args)
 			failIf(err)
 			triggerResolve(c)
 		}
 	case "get-id":
 		{
-			c, err := createGetIdConfig(&args)
+			c, err := createGetIdConfig(args)
 			failIf(err)
 			fmt.Println(getId(c))
 		}
 	case "get-iles":
 		{
-			c, err := createGetIlesConfig(&args)
+			c, err := createGetIlesConfig(args)
 			failIf(err)
 
 			// Print messages in reverse, trigger first
