@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestGetIlesmapOrNewMap(t *testing.T) {
 	populatedMapData := make(map[string]interface{})

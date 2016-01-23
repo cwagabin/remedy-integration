@@ -15,11 +15,13 @@
 
 package main
 
-import "errors"
-import "fmt"
-import "io"
-import "io/ioutil"
-import "net/http"
+import (
+	"errors"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+)
 
 type HttpRequest struct {
 	Method string

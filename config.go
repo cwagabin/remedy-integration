@@ -15,9 +15,11 @@
 
 package main
 
-import "errors"
-import "flag"
-import "fmt"
+import (
+	"errors"
+	"flag"
+	"fmt"
+)
 
 type Config struct {
 	ApiKey      string

@@ -15,8 +15,10 @@
 
 package main
 
-import "bytes"
-import "encoding/json"
+import (
+	"bytes"
+	"encoding/json"
+)
 
 type Event struct {
 	ServiceKey  string `json:"service_key"`

@@ -15,8 +15,10 @@
 
 package main
 
-import "encoding/json"
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type ILE struct {
 	Type             string
