@@ -1,0 +1,10 @@
+language: go
+go:
+- 1.5.3
+sudo: false
+install: make deps
+script: make test
+notifications:
+  email:
+    on_success: never
+    on_failure: never
