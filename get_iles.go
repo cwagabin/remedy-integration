@@ -94,9 +94,9 @@ func (i *ILE) FriendlyMessage() *string {
 func mapOrNewMap(m map[string]interface{}, k string) map[string]interface{} {
 	if val, ok := m[k]; ok {
 		return val.(map[string]interface{})
-	} else {
-		return make(map[string]interface{})
 	}
+
+	return make(map[string]interface{})
 }
 
 // Returns an empty string if the JSON key is missing
@@ -104,9 +104,9 @@ func mapOrNewMap(m map[string]interface{}, k string) map[string]interface{} {
 func stringOrNewString(m map[string]interface{}, k string) string {
 	if val, ok := m[k]; ok {
 		return val.(string)
-	} else {
-		return ""
 	}
+
+	return ""
 }
 
 func parseIles(res []byte) ([]*ILE, error) {

@@ -144,6 +144,6 @@ func TestConfigApiEndpoint(t *testing.T) {
 
 	endpoint := c.apiEndpoint()
 	if endpoint != "https://foo.pagerduty.com/api/v1" {
-		t.Error("*Config.ApiEndpoint failure: %s", endpoint)
+		t.Errorf("*Config.ApiEndpoint failure: %s", endpoint)
 	}
 }
