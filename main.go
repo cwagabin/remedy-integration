@@ -36,9 +36,9 @@ func main() {
 		}
 	case "get-id":
 		{
-			c, err := createGetIdConfig(&args)
+			c, err := createGetIDConfig(&args)
 			failIf(err)
-			fmt.Println(getId(c))
+			fmt.Println(getID(c))
 		}
 	case "get-iles":
 		{

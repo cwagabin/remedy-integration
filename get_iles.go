@@ -144,10 +144,10 @@ func parseIles(res []byte) ([]*ILE, error) {
 }
 
 func getIles(c *Config) (messages []string) {
-	url := fmt.Sprintf("%s/incidents/%s/log_entries", c.apiEndpoint(), c.IncidentId)
-	req := &HttpRequest{
+	url := fmt.Sprintf("%s/incidents/%s/log_entries", c.apiEndpoint(), c.IncidentID)
+	req := &HTTPRequest{
 		Method: "GET",
-		Url:    &url,
+		URL:    &url,
 		Data:   nil,
 	}
 	res, err := httpRequest(c, req)

@@ -18,10 +18,10 @@ package main
 import "encoding/json"
 import "fmt"
 
-func getId(c *Config) string {
-	req := &HttpRequest{}
+func getID(c *Config) string {
+	req := &HTTPRequest{}
 	url := fmt.Sprintf("%s/incidents?incident_key=%s", c.apiEndpoint(), c.IncidentKey)
-	req.Url = &url
+	req.URL = &url
 	req.Method = "GET"
 	res, err := httpRequest(c, req)
 	failIf(err)
@@ -35,6 +35,6 @@ func getId(c *Config) string {
 	if len(incidents) < 1 {
 		return ""
 	}
-	first_incident := incidents[0].(map[string]interface{})
-	return first_incident["id"].(string)
+	firstIncident := incidents[0].(map[string]interface{})
+	return firstIncident["id"].(string)
 }

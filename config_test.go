@@ -86,7 +86,7 @@ func TestCreateGetIdConfig(t *testing.T) {
 		"MY_INCIDENT_KEY",
 	}
 
-	_, err := createGetIdConfig(&args)
+	_, err := createGetIDConfig(&args)
 	if err != nil {
 		t.Error(err)
 	}
@@ -102,13 +102,13 @@ func TestConfigCheckConfig(t *testing.T) {
 		"MY_INCIDENT_KEY",
 	}
 
-	c, err := createGetIdConfig(&args)
+	c, err := createGetIDConfig(&args)
 	if err != nil {
 		t.Error(err)
 	}
 
 	required := map[string]*string{
-		"api-key":      &c.ApiKey,
+		"api-key":      &c.APIKey,
 		"subdomain":    &c.Subdomain,
 		"incident-key": &c.IncidentKey,
 	}

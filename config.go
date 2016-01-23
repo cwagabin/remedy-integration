@@ -20,11 +20,11 @@ import "flag"
 import "fmt"
 
 type Config struct {
-	ApiKey      string
+	APIKey      string
 	Subdomain   string
 	ServiceKey  string
 	IncidentKey string
-	IncidentId  string
+	IncidentID  string
 	Description string
 	Details     string
 	Mode        string
@@ -35,10 +35,10 @@ func (c *Config) apiEndpoint() (url string) {
 	return url
 }
 
-func createGetIdConfig(args *[]string) (c *Config, err error) {
+func createGetIDConfig(args *[]string) (c *Config, err error) {
 	c = &Config{}
 	flags := flag.NewFlagSet("get-id", flag.ExitOnError)
-	flags.StringVar(&c.ApiKey, "api-key", "", "Your PagerDuty API key (required)")
+	flags.StringVar(&c.APIKey, "api-key", "", "Your PagerDuty API key (required)")
 	flags.StringVar(&c.Subdomain, "subdomain", "", "Your PagerDuty subdomain (required)")
 	flags.StringVar(&c.IncidentKey, "incident-key", "", "The PagerDuty incident key (required)")
 	err = flags.Parse(*args)
@@ -48,7 +48,7 @@ func createGetIdConfig(args *[]string) (c *Config, err error) {
 
 	c.Mode = "get-id"
 	required := map[string]*string{
-		"ap-key":       &c.ApiKey,
+		"ap-key":       &c.APIKey,
 		"subdomain":    &c.Subdomain,
 		"incident-key": &c.IncidentKey,
 	}
@@ -59,9 +59,9 @@ func createGetIdConfig(args *[]string) (c *Config, err error) {
 func createGetIlesConfig(args *[]string) (c *Config, err error) {
 	c = &Config{}
 	flags := flag.NewFlagSet("get-iles", flag.ExitOnError)
-	flags.StringVar(&c.ApiKey, "api-key", "", "Your PagerDuty API key (required)")
+	flags.StringVar(&c.APIKey, "api-key", "", "Your PagerDuty API key (required)")
 	flags.StringVar(&c.Subdomain, "subdomain", "", "Your PagerDuty subdomain (required)")
-	flags.StringVar(&c.IncidentId, "incident-id", "", "The PagerDuty Incident ID")
+	flags.StringVar(&c.IncidentID, "incident-id", "", "The PagerDuty Incident ID")
 	err = flags.Parse(*args)
 	if err != nil {
 		return
@@ -69,9 +69,9 @@ func createGetIlesConfig(args *[]string) (c *Config, err error) {
 
 	c.Mode = "get-iles"
 	required := map[string]*string{
-		"api-key":     &c.ApiKey,
+		"api-key":     &c.APIKey,
 		"subdomain":   &c.Subdomain,
-		"incident-id": &c.IncidentId,
+		"incident-id": &c.IncidentID,
 	}
 	err = checkConfig(c, required)
 	return

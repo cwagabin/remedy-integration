@@ -39,9 +39,9 @@ func triggerResolve(c *Config) {
 	payload, err := json.Marshal(event)
 	failIf(err)
 
-	req := &HttpRequest{
+	req := &HTTPRequest{
 		Method: "POST",
-		Url:    &eventEndpoint,
+		URL:    &eventEndpoint,
 		Data:   bytes.NewBuffer(payload),
 	}
 

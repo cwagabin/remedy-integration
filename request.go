@@ -21,20 +21,20 @@ import "io"
 import "io/ioutil"
 import "net/http"
 
-type HttpRequest struct {
+type HTTPRequest struct {
 	Method string
-	Url    *string
+	URL    *string
 	Data   io.Reader
 }
 
-func httpRequest(c *Config, r *HttpRequest) (response_body []byte, err error) {
-	req, err := http.NewRequest(r.Method, *r.Url, r.Data)
+func httpRequest(c *Config, r *HTTPRequest) (responseBody []byte, err error) {
+	req, err := http.NewRequest(r.Method, *r.URL, r.Data)
 	if err != nil {
 		return
 	}
 
 	// Add authentication headers
-	token := fmt.Sprintf("Token token=%s", c.ApiKey)
+	token := fmt.Sprintf("Token token=%s", c.APIKey)
 	req.Header.Set("Authorization", token)
 	req.Header.Set("Content-type", "application/json")
 
@@ -53,6 +53,6 @@ func httpRequest(c *Config, r *HttpRequest) (response_body []byte, err error) {
 		return
 	}
 
-	response_body, err = ioutil.ReadAll(response.Body)
+	responseBody, err = ioutil.ReadAll(response.Body)
 	return
 }
