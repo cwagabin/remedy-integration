@@ -4,45 +4,45 @@ import "fmt"
 import "testing"
 
 func TestGetIlesmapOrNewMap(t *testing.T) {
-  populatedMapData :=  make(map[string]interface{})
-  populatedMapData["bar"] = "baz"
-  populatedMap := make(map[string]interface{})
-  populatedMap["foo"] = populatedMapData
+	populatedMapData := make(map[string]interface{})
+	populatedMapData["bar"] = "baz"
+	populatedMap := make(map[string]interface{})
+	populatedMap["foo"] = populatedMapData
 
-  result := mapOrNewMap(populatedMap, "foo")
-  if len(result) < 1 {
-    msg := fmt.Sprintf("mapOrNewMap failed to extract valid key from map. Got: %v", result)
-    t.Error(msg)
-  }
+	result := mapOrNewMap(populatedMap, "foo")
+	if len(result) < 1 {
+		msg := fmt.Sprintf("mapOrNewMap failed to extract valid key from map. Got: %v", result)
+		t.Error(msg)
+	}
 
-  emptyMap := make(map[string]interface{})
-  result = mapOrNewMap(emptyMap, "foo")
-  if len(result) != 0 {
-    msg := fmt.Sprintf("mapOrNewMap failed to return a new empty map. Got: %v", result)
-    t.Error(msg)
-  }
+	emptyMap := make(map[string]interface{})
+	result = mapOrNewMap(emptyMap, "foo")
+	if len(result) != 0 {
+		msg := fmt.Sprintf("mapOrNewMap failed to return a new empty map. Got: %v", result)
+		t.Error(msg)
+	}
 }
 
 func TestGetIlesstringOrNewString(t *testing.T) {
-  populatedMap := make(map[string]interface{})
-  populatedMap["foo"] = "bar"
-  emptyMap := make(map[string]interface{})
+	populatedMap := make(map[string]interface{})
+	populatedMap["foo"] = "bar"
+	emptyMap := make(map[string]interface{})
 
-  result := stringOrNewString(populatedMap, "foo")
-  if result != "bar" {
-    msg := fmt.Sprintf("stringOrNewString failed to extract valid string from map. Got: %v", result)
-    t.Error(msg)
-  }
+	result := stringOrNewString(populatedMap, "foo")
+	if result != "bar" {
+		msg := fmt.Sprintf("stringOrNewString failed to extract valid string from map. Got: %v", result)
+		t.Error(msg)
+	}
 
-  result = stringOrNewString(emptyMap, "foo")
-  if result != "" {
-    msg := fmt.Sprintf("stringOrNewString failed to return a new empty string. Got: %v", result)
-    t.Error(msg)
-  }
+	result = stringOrNewString(emptyMap, "foo")
+	if result != "" {
+		msg := fmt.Sprintf("stringOrNewString failed to return a new empty string. Got: %v", result)
+		t.Error(msg)
+	}
 }
 
 func TestGetIlesParseILEs(t *testing.T) {
-  response := `{
+	response := `{
     "log_entries": [
       {
         "id": "PPV5KG7",
@@ -306,140 +306,140 @@ func TestGetIlesParseILEs(t *testing.T) {
     "total": 12
   }`
 
-  var err error
-  var expectedIle ILE
+	var err error
+	var expectedIle ILE
 
-  ileSlice, err := parseIles([]byte(response))
-  if err != nil {
-    msg := fmt.Sprintf("Encountered an error while parsing ILE response: %v", err)
-    t.Error(msg)
-  }
+	ileSlice, err := parseIles([]byte(response))
+	if err != nil {
+		msg := fmt.Sprintf("Encountered an error while parsing ILE response: %v", err)
+		t.Error(msg)
+	}
 
-  if len(ileSlice) != 12 {
-    msg := fmt.Sprintf("Unexpected number of ILEs in parsed response. Got: %v", len(ileSlice))
-    t.Error(msg)
-  }
+	if len(ileSlice) != 12 {
+		msg := fmt.Sprintf("Unexpected number of ILEs in parsed response. Got: %v", len(ileSlice))
+		t.Error(msg)
+	}
 
-  // Test parsing of various ILE types
-  resolveIle := ileSlice[0]
-  friendlyMessage := resolveIle.FriendlyMessage()
-  expectedIle.Type = "resolve"
-  expectedIle.AgentName = "Tim Wright"
-  expectedIle.AgentType = "user"
-  expectedIle.ChannelType = "website"
-  expectedIle.NotificationType = ""
-  expectedIle.UserName = ""
-  expectedIle.AssignedUser = ""
-  if *resolveIle != expectedIle {
-    msg := fmt.Sprintf("Resolve ILE parsed incorrectly. Got: %v", resolveIle)
-    t.Error(msg)
-  }
-  if *friendlyMessage != "Resolved by Tim Wright via website" {
-    msg := fmt.Sprintf("Error generating friendly resolve message. Got: %v", *friendlyMessage)
-    t.Error(msg)
-  }
+	// Test parsing of various ILE types
+	resolveIle := ileSlice[0]
+	friendlyMessage := resolveIle.FriendlyMessage()
+	expectedIle.Type = "resolve"
+	expectedIle.AgentName = "Tim Wright"
+	expectedIle.AgentType = "user"
+	expectedIle.ChannelType = "website"
+	expectedIle.NotificationType = ""
+	expectedIle.UserName = ""
+	expectedIle.AssignedUser = ""
+	if *resolveIle != expectedIle {
+		msg := fmt.Sprintf("Resolve ILE parsed incorrectly. Got: %v", resolveIle)
+		t.Error(msg)
+	}
+	if *friendlyMessage != "Resolved by Tim Wright via website" {
+		msg := fmt.Sprintf("Error generating friendly resolve message. Got: %v", *friendlyMessage)
+		t.Error(msg)
+	}
 
-  notifyIle := ileSlice[1]
-  friendlyMessage = notifyIle.FriendlyMessage()
-  expectedIle.Type = "notify"
-  expectedIle.AgentName = ""
-  expectedIle.AgentType = ""
-  expectedIle.ChannelType = ""
-  expectedIle.NotificationType = "email"
-  expectedIle.UserName = "Bob Smith"
-  expectedIle.AssignedUser = ""
-  if *notifyIle != expectedIle {
-    msg := fmt.Sprintf("Notify ILE parsed incorrectly. Got: %v", notifyIle)
-    t.Error(msg)
-  }
-  if *friendlyMessage != "Notified Bob Smith via email" {
-    msg := fmt.Sprintf("Error generating friendly notify message. Got: %v", *friendlyMessage)
-    t.Error(msg)
-  }
+	notifyIle := ileSlice[1]
+	friendlyMessage = notifyIle.FriendlyMessage()
+	expectedIle.Type = "notify"
+	expectedIle.AgentName = ""
+	expectedIle.AgentType = ""
+	expectedIle.ChannelType = ""
+	expectedIle.NotificationType = "email"
+	expectedIle.UserName = "Bob Smith"
+	expectedIle.AssignedUser = ""
+	if *notifyIle != expectedIle {
+		msg := fmt.Sprintf("Notify ILE parsed incorrectly. Got: %v", notifyIle)
+		t.Error(msg)
+	}
+	if *friendlyMessage != "Notified Bob Smith via email" {
+		msg := fmt.Sprintf("Error generating friendly notify message. Got: %v", *friendlyMessage)
+		t.Error(msg)
+	}
 
-  escalateIle := ileSlice[3]
-  friendlyMessage = escalateIle.FriendlyMessage()
-  expectedIle.Type = "escalate"
-  expectedIle.AgentName = ""
-  expectedIle.AgentType = "service"
-  expectedIle.ChannelType = "timeout"
-  expectedIle.NotificationType = ""
-  expectedIle.UserName = ""
-  expectedIle.AssignedUser = "Bob Smith"
-  if *escalateIle != expectedIle {
-    msg := fmt.Sprintf("Escalate ILE parsed incorrectly. Got: %v", escalateIle)
-    t.Error(msg)
-  }
-  if *friendlyMessage != "Escalated to Bob Smith" {
-    msg := fmt.Sprintf("Error generating friendly escalate message. Got: %v", *friendlyMessage)
-    t.Error(msg)
-  }
+	escalateIle := ileSlice[3]
+	friendlyMessage = escalateIle.FriendlyMessage()
+	expectedIle.Type = "escalate"
+	expectedIle.AgentName = ""
+	expectedIle.AgentType = "service"
+	expectedIle.ChannelType = "timeout"
+	expectedIle.NotificationType = ""
+	expectedIle.UserName = ""
+	expectedIle.AssignedUser = "Bob Smith"
+	if *escalateIle != expectedIle {
+		msg := fmt.Sprintf("Escalate ILE parsed incorrectly. Got: %v", escalateIle)
+		t.Error(msg)
+	}
+	if *friendlyMessage != "Escalated to Bob Smith" {
+		msg := fmt.Sprintf("Error generating friendly escalate message. Got: %v", *friendlyMessage)
+		t.Error(msg)
+	}
 
-  // No friendly message for unacks
-  unackIle := ileSlice[6]
-  expectedIle.Type = "unacknowledge"
-  expectedIle.AgentName = ""
-  expectedIle.AgentType = "service"
-  expectedIle.ChannelType = "timeout"
-  expectedIle.NotificationType = ""
-  expectedIle.UserName = ""
-  expectedIle.AssignedUser = ""
-  if *unackIle != expectedIle {
-    msg := fmt.Sprintf("Unack ILE parsed incorrectly. Got: %v", unackIle)
-    t.Error(msg)
-  }
+	// No friendly message for unacks
+	unackIle := ileSlice[6]
+	expectedIle.Type = "unacknowledge"
+	expectedIle.AgentName = ""
+	expectedIle.AgentType = "service"
+	expectedIle.ChannelType = "timeout"
+	expectedIle.NotificationType = ""
+	expectedIle.UserName = ""
+	expectedIle.AssignedUser = ""
+	if *unackIle != expectedIle {
+		msg := fmt.Sprintf("Unack ILE parsed incorrectly. Got: %v", unackIle)
+		t.Error(msg)
+	}
 
-  ackIle := ileSlice[7]
-  friendlyMessage = ackIle.FriendlyMessage()
-  expectedIle.Type = "acknowledge"
-  expectedIle.AgentName = "Tim Wright"
-  expectedIle.AgentType = "user"
-  expectedIle.ChannelType = "phone"
-  expectedIle.NotificationType = ""
-  expectedIle.UserName = ""
-  expectedIle.AssignedUser = ""
-  if *ackIle != expectedIle {
-    msg := fmt.Sprintf("Ack ILE parsed incorrectly. Got: %v", ackIle)
-    t.Error(msg)
-  }
-  if *friendlyMessage != "Acknowledged by Tim Wright via phone" {
-    msg := fmt.Sprintf("Error generating friendly ack message. Got: %v", *friendlyMessage)
-    t.Error(msg)
-  }
+	ackIle := ileSlice[7]
+	friendlyMessage = ackIle.FriendlyMessage()
+	expectedIle.Type = "acknowledge"
+	expectedIle.AgentName = "Tim Wright"
+	expectedIle.AgentType = "user"
+	expectedIle.ChannelType = "phone"
+	expectedIle.NotificationType = ""
+	expectedIle.UserName = ""
+	expectedIle.AssignedUser = ""
+	if *ackIle != expectedIle {
+		msg := fmt.Sprintf("Ack ILE parsed incorrectly. Got: %v", ackIle)
+		t.Error(msg)
+	}
+	if *friendlyMessage != "Acknowledged by Tim Wright via phone" {
+		msg := fmt.Sprintf("Error generating friendly ack message. Got: %v", *friendlyMessage)
+		t.Error(msg)
+	}
 
-  assignIle := ileSlice[10]
-  friendlyMessage = assignIle.FriendlyMessage()
-  expectedIle.Type = "assign"
-  expectedIle.AgentName = ""
-  expectedIle.AgentType = "service"
-  expectedIle.ChannelType = "auto"
-  expectedIle.NotificationType = ""
-  expectedIle.UserName = ""
-  expectedIle.AssignedUser = "Tim Wright"
-  if *assignIle != expectedIle {
-    msg := fmt.Sprintf("Assign ILE parsed incorrectly. Got: %v", assignIle)
-    t.Error(msg)
-  }
-  if *friendlyMessage != "Assigned to Tim Wright" {
-    msg := fmt.Sprintf("Error generating friendly assign message. Got %v", *friendlyMessage)
-    t.Error(msg)
-  }
+	assignIle := ileSlice[10]
+	friendlyMessage = assignIle.FriendlyMessage()
+	expectedIle.Type = "assign"
+	expectedIle.AgentName = ""
+	expectedIle.AgentType = "service"
+	expectedIle.ChannelType = "auto"
+	expectedIle.NotificationType = ""
+	expectedIle.UserName = ""
+	expectedIle.AssignedUser = "Tim Wright"
+	if *assignIle != expectedIle {
+		msg := fmt.Sprintf("Assign ILE parsed incorrectly. Got: %v", assignIle)
+		t.Error(msg)
+	}
+	if *friendlyMessage != "Assigned to Tim Wright" {
+		msg := fmt.Sprintf("Error generating friendly assign message. Got %v", *friendlyMessage)
+		t.Error(msg)
+	}
 
-  triggerIle := ileSlice[11]
-  friendlyMessage = triggerIle.FriendlyMessage()
-  expectedIle.Type = "trigger"
-  expectedIle.AgentName = "Tim Wright"
-  expectedIle.AgentType = "user"
-  expectedIle.ChannelType = "web_trigger"
-  expectedIle.NotificationType = ""
-  expectedIle.UserName = ""
-  expectedIle.AssignedUser = ""
-  if *triggerIle != expectedIle {
-    msg := fmt.Sprintf("Trigger ILE parsed incorrectly. Got: %v", triggerIle)
-    t.Error(msg)
-  }
-  if *friendlyMessage != "Triggered by Tim Wright" {
-    msg := fmt.Sprintf("Error generating friendly trigger message. Got: %v", *friendlyMessage)
-    t.Error(msg)
-  }
+	triggerIle := ileSlice[11]
+	friendlyMessage = triggerIle.FriendlyMessage()
+	expectedIle.Type = "trigger"
+	expectedIle.AgentName = "Tim Wright"
+	expectedIle.AgentType = "user"
+	expectedIle.ChannelType = "web_trigger"
+	expectedIle.NotificationType = ""
+	expectedIle.UserName = ""
+	expectedIle.AssignedUser = ""
+	if *triggerIle != expectedIle {
+		msg := fmt.Sprintf("Trigger ILE parsed incorrectly. Got: %v", triggerIle)
+		t.Error(msg)
+	}
+	if *friendlyMessage != "Triggered by Tim Wright" {
+		msg := fmt.Sprintf("Error generating friendly trigger message. Got: %v", *friendlyMessage)
+		t.Error(msg)
+	}
 }
