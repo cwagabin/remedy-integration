@@ -1,4 +1,4 @@
-// Copyright:: Copyright (c) 2016 PagerDuty, Inc.
+// Copyright:: Copyright (c) 2016-2017 PagerDuty, Inc.
 // License:: Apache License, Version 2.0
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,28 +15,38 @@
 
 package main
 
-import "errors"
-import "fmt"
-import "io"
-import "io/ioutil"
-import "net/http"
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
+	"time"
+)
 
-type HttpRequest struct {
+type HTTPRequest struct {
 	Method string
-	Url    *string
+	URL    *string
 	Data   io.Reader
 }
 
-func httpRequest(c *Config, r *HttpRequest) (response_body []byte, err error) {
-	req, err := http.NewRequest(r.Method, *r.Url, r.Data)
+func httpRequest(c *Config, r *HTTPRequest) (responseBody []byte, statusCode int, err error) {
+	req, err := http.NewRequest(r.Method, *r.URL, r.Data)
 	if err != nil {
 		return
 	}
 
 	// Add authentication headers
-	token := fmt.Sprintf("Token token=%s", c.ApiKey)
+	token := fmt.Sprintf("Token token=%s", c.APIKey)
 	req.Header.Set("Authorization", token)
+	req.Header.Set("Accept", "application/vnd.pagerduty+json;version=2")
 	req.Header.Set("Content-type", "application/json")
+	clientHeader := fmt.Sprintf("\"%s\" <%s>", c.Client, c.ClientURL)
+	req.Header.Set("X-PagerDuty-Client", clientHeader)
+	if c.Requester != "" {
+		req.Header.Set("From", c.Requester)
+	}
 
 	// Fire request
 	client := &http.Client{}
@@ -46,13 +56,35 @@ func httpRequest(c *Config, r *HttpRequest) (response_body []byte, err error) {
 	}
 	defer response.Body.Close()
 
-	// Only 200's allowed
-	if response.Status != "200 OK" {
-		message := fmt.Sprintf("Got HTTP status code %s", response.Status)
+	// Only 200 (ok) and 201 (created) are allowed
+	responseBody, err = ioutil.ReadAll(response.Body)
+	statusCode = response.StatusCode
+	if response.StatusCode != http.StatusOK && response.StatusCode != http.StatusCreated {
+		message := fmt.Sprintf("Got HTTP status code %s%s", response.Status, parseResponseBody(responseBody))
 		err = errors.New(message)
 		return
 	}
 
-	response_body, err = ioutil.ReadAll(response.Body)
 	return
+}
+
+func retryHTTPRequest(c *Config, r *HTTPRequest, maxRetries int, delayTime time.Duration) (body []byte, statusCode int, err error) {
+	attempt := 1
+	for {
+		body, statusCode, err = httpRequest(c, r)
+		if (err == nil) || (attempt >= maxRetries && err != nil) {
+			return
+		}
+		time.Sleep(delayTime * time.Second)
+		attempt++
+	}
+}
+
+func parseResponseBody(responseBody []byte) string {
+	var jsonMap map[string]interface{}
+	if json.Unmarshal(responseBody, &jsonMap) != nil {
+		return ""
+	}
+	errEntry := jsonMap["error"].(map[string]interface{})
+	return fmt.Sprintf(": %s", errEntry["message"].(string))
 }
