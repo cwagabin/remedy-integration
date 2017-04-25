@@ -1,4 +1,4 @@
-// Copyright:: Copyright (c) 2016 PagerDuty, Inc.
+// Copyright:: Copyright (c) 2016-2017 PagerDuty, Inc.
 // License:: Apache License, Version 2.0
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,10 @@
 
 package main
 
-import "fmt"
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
 func main() {
 	mode := os.Args[1]
@@ -24,25 +26,37 @@ func main() {
 	switch mode {
 	case "trigger":
 		{
-			c, err := createTriggerConfig(&args)
+			c, err := createTriggerAckResolveChangePolicyConfig(mode, args)
 			failIf(err)
-			triggerResolve(c)
+			triggerAckResolveChangePolicy(c)
+		}
+	case "acknowledge":
+		{
+			c, err := createTriggerAckResolveChangePolicyConfig(mode, args)
+			failIf(err)
+			triggerAckResolveChangePolicy(c)
 		}
 	case "resolve":
 		{
-			c, err := createResolveConfig(&args)
+			c, err := createTriggerAckResolveChangePolicyConfig(mode, args)
 			failIf(err)
-			triggerResolve(c)
+			triggerAckResolveChangePolicy(c)
 		}
 	case "get-id":
 		{
-			c, err := createGetIdConfig(&args)
+			c, err := createGetIDConfig(args)
 			failIf(err)
-			fmt.Println(getId(c))
+			fmt.Println(getID(c))
+		}
+	case "get-validate-id":
+		{
+			c, err := createGetValidateIdConfig(args)
+			failIf(err)
+			fmt.Println(getValidateID(c))
 		}
 	case "get-iles":
 		{
-			c, err := createGetIlesConfig(&args)
+			c, err := createGetIlesConfig(args)
 			failIf(err)
 
 			// Print messages in reverse, trigger first
@@ -50,6 +64,36 @@ func main() {
 			for i := len(messages) - 1; i >= 0; i-- {
 				fmt.Println(messages[i])
 			}
+		}
+	case "get-service-id":
+		{
+			c, err := createGetServiceIDConfig(args)
+			failIf(err)
+			fmt.Println(getServiceID(c))
+		}
+	case "get-service-escalation-id":
+		{
+			c, err := createGetServiceEscalationIDConfig(args)
+			failIf(err)
+			fmt.Println(getServiceEscalationID(c))
+		}
+	case "validate-escalation-policy-id":
+		{
+			c, err := createValidateEscalationPolicyIDConfig(args)
+			failIf(err)
+			fmt.Println(validateEscalationPolicyID(c))
+		}
+	case "get-user-id":
+		{
+			c, err := createGetUserIDConfig(args)
+			failIf(err)
+			fmt.Println(getUserID(c))
+		}
+	case "test-connection":
+		{
+			c, err := createTestConnectionConfig(args)
+			failIf(err)
+			fmt.Println(testAPIConnection(c))
 		}
 	default:
 		{
@@ -64,9 +108,16 @@ func usage() {
 	fmt.Fprintln(os.Stderr, "")
 	fmt.Fprintln(os.Stderr, "Subcommands:")
 	fmt.Fprintln(os.Stderr, "\ttrigger")
+	fmt.Fprintln(os.Stderr, "\tacknowledge")
 	fmt.Fprintln(os.Stderr, "\tresolve")
 	fmt.Fprintln(os.Stderr, "\tget-id")
+	fmt.Fprintln(os.Stderr, "\tget-validate-id")
 	fmt.Fprintln(os.Stderr, "\tget-iles")
+	fmt.Fprintln(os.Stderr, "\tget-service-id")
+	fmt.Fprintln(os.Stderr, "\tget-service-escalation-id")
+	fmt.Fprintln(os.Stderr, "\tget-user-id")
+	fmt.Fprintln(os.Stderr, "\tvalidate-escalation-policy-id")
+	fmt.Fprintln(os.Stderr, "\ttest-connection")
 	os.Exit(1)
 }
 

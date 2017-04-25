@@ -2,75 +2,15 @@ package main
 
 import "testing"
 
-func TestCreateResolveConfig(t *testing.T) {
-	args := []string{
-		"-service-key",
-		"NOT_A_REAL_KEY",
-		"-incident-key",
-		"MY_INCIDENT_KEY",
-		"-description",
-		"My Description",
-	}
-
-	_, err := createResolveConfig(&args)
-	if err != nil {
-		t.Error(err)
-	}
-
-	// Try w/o optional params
-	args = []string{
-		"-service-key",
-		"NOT_A_REAL_KEY",
-		"-incident-key",
-		"NOT_A_REAL_KEY",
-	}
-	_, err = createResolveConfig(&args)
-	if err != nil {
-		t.Error(err)
-	}
-}
-
-func TestCreateTriggerConfig(t *testing.T) {
-	args := []string{
-		"-service-key",
-		"NOT_A_REAL_KEY",
-		"-incident-key",
-		"MY_INCIDENT_KEY",
-		"-description",
-		"My Description",
-		"-details",
-		"My Details",
-	}
-
-	_, err := createTriggerConfig(&args)
-	if err != nil {
-		t.Error(err)
-	}
-
-	// Try w/o optional params
-	args = []string{
-		"-service-key",
-		"NOT_A_REAL_KEY",
-		"-description",
-		"My Description",
-	}
-	_, err = createTriggerConfig(&args)
-	if err != nil {
-		t.Error(err)
-	}
-}
-
 func TestCreateGetIlesConfig(t *testing.T) {
 	args := []string{
 		"-api-key",
 		"NOT_A_REAL_KEY",
-		"-subdomain",
-		"foo",
 		"-incident-id",
 		"MY_INCIDENT_ID",
 	}
 
-	_, err := createGetIlesConfig(&args)
+	_, err := createGetIlesConfig(args)
 	if err != nil {
 		t.Error(err)
 	}
@@ -80,13 +20,67 @@ func TestCreateGetIdConfig(t *testing.T) {
 	args := []string{
 		"-api-key",
 		"NOT_A_REAL_KEY",
-		"-subdomain",
-		"foo",
 		"-incident-key",
 		"MY_INCIDENT_KEY",
 	}
 
-	_, err := createGetIdConfig(&args)
+	_, err := createGetIDConfig(args)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestCreateGetServiceIdConfig(t *testing.T) {
+	args := []string{
+		"-api-key",
+		"NOT_A_REAL_KEY",
+		"-service-name",
+		"MY_SERVICE_NAME",
+	}
+
+	_, err := createGetServiceIDConfig(args)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestCreateGetServiceEscalationPolicyIdConfig(t *testing.T) {
+	args := []string{
+		"-api-key",
+		"NOT_A_REAL_KEY",
+		"-service-id",
+		"MY_SERVICE_ID",
+	}
+
+	_, err := createGetServiceEscalationIDConfig(args)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestCreateValidateEscalationPolicyIdConfig(t *testing.T) {
+	args := []string{
+		"-api-key",
+		"NOT_A_REAL_KEY",
+		"-escalation-policy-id",
+		"MY_ESCALATION_POLICY_ID",
+	}
+
+	_, err := createValidateEscalationPolicyIDConfig(args)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestCreateGetUserIdConfig(t *testing.T) {
+	args := []string{
+		"-api-key",
+		"NOT_A_REAL_KEY",
+		"-user-email",
+		"MY_USER_EMAIL",
+	}
+
+	_, err := createGetUserIDConfig(args)
 	if err != nil {
 		t.Error(err)
 	}
@@ -96,20 +90,17 @@ func TestConfigCheckConfig(t *testing.T) {
 	args := []string{
 		"-api-key",
 		"NOT_A_REAL_KEY",
-		"-subdomain",
-		"foo",
 		"-incident-key",
 		"MY_INCIDENT_KEY",
 	}
 
-	c, err := createGetIdConfig(&args)
+	c, err := createGetIDConfig(args)
 	if err != nil {
 		t.Error(err)
 	}
 
 	required := map[string]*string{
-		"api-key":      &c.ApiKey,
-		"subdomain":    &c.Subdomain,
+		"api-key":      &c.APIKey,
 		"incident-key": &c.IncidentKey,
 	}
 
@@ -131,19 +122,17 @@ func TestConfigApiEndpoint(t *testing.T) {
 	args := []string{
 		"-api-key",
 		"NOT_A_REAL_KEY",
-		"-subdomain",
-		"foo",
 		"-incident-id",
 		"MY_INCIDENT_ID",
 	}
 
-	c, err := createGetIlesConfig(&args)
+	c, err := createGetIlesConfig(args)
 	if err != nil {
 		t.Error(err)
 	}
 
 	endpoint := c.apiEndpoint()
-	if endpoint != "https://foo.pagerduty.com/api/v1" {
+	if endpoint != "https://api.pagerduty.com" {
 		t.Error("*Config.ApiEndpoint failure: %s", endpoint)
 	}
 }
